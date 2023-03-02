@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//统一每一个控制器方法返回值
 @RestController
 @RequestMapping("/books")
 public class BookController {
@@ -33,6 +32,18 @@ public class BookController {
          */
         boolean flag = bookService.delete(id);
         return new Result(flag ? Code.DELETE_OK : Code.DELETE_ERR, flag);
+    }
+
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable Integer id) {
+        Book book = bookService.findById(id);
+        /**
+         * 输入查询id;如果id存在;返回状态码成功;并且提示信息为 ""
+         *换言之如果id;不存在；返回状态码失败;提示信息为"数据查询失败，请重试一下
+         */
+        Integer code = id != null ? Code.GET_OK : Code.GET_ERR;
+        String msg = id != null ? "" : "数据查询失败，请重试！";
+        return new Result(code, book, msg);
     }
 
     @GetMapping
